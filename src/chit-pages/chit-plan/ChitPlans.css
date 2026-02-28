@@ -1,0 +1,59 @@
+.plan_detail .plan_tabs {
+  background: #efefef;
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+  padding: 3px !important;
+  display: inline-block;
+}
+
+.plan_detail .plan_tabs {
+  list-style-type: none;
+  display: flex;
+  place-items: center;
+  gap: 5px;
+  margin-bottom: 0;
+  padding-left: 0px;
+}
+.plan_detail .plan_tabs .tab_items {
+  background: #fff;
+  padding: 10px 15px;
+  font-size: 14px;
+  flex: 1 1 auto;
+  border-radius: 5px;
+  outline: none;
+  border: none;
+}
+.plan_detail .plan_tabs .tab_items small {
+  font-size: 10px;
+  color: #444;
+}
+.plan_detail .plan_tabs .tab_items.active {
+  background: var(--gradient-color);
+  color: #fff;
+}
+.plan_detail .plan_tabs .tab_items.active small {
+  color: #fff;
+}
+.plan-item-list {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 25px;
+}
+.plan-item-list .plan-item {
+  flex: 1 1 0;
+}
+.plan-item-list .plan-item .plan-btn {
+  background: #efefef;
+  padding: 10px 20px;
+  border: 1px solid #dee2e6;
+  font-size: 14px;
+  border-radius: 5px;
+  width: 100%;
+}
+.plan-item-list .plan-item .btn-check:checked ~ .plan-btn,
+.plan-item-list .plan-item .plan-btn:hover {
+  background: var(--gradient-color);
+  color: #fff;
+  border-color: var(--main-color);
+}

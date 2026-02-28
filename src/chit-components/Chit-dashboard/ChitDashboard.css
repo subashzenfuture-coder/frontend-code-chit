@@ -1,0 +1,18 @@
+.chit_dashboard_main {
+  position: relative;
+  width: calc(100% - 230px);
+  margin-left: 230px;
+}
+.chit_dashboard_main .chit_dashboard_container {
+  padding: 15px;
+}
+
+/* ===============================
+   RESPONSIVE (MOBILE)
+================================= */
+@media (max-width: 768px) {
+  .chit_dashboard_main {
+    margin-left: 0px;
+    width: 100%;
+  }
+}

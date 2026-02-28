@@ -1,0 +1,40 @@
+.agent-card {
+  background: #fff;
+  padding: 18px;
+  box-shadow: 0 10px 26px #00000014;
+  border-radius: 10px;
+}
+.agent-card .avatar-wrapper {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto;
+  background: #efefef;
+  color: #fff;
+  font-size: 36px;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: #8b0000;
+  display: flex;
+  border-radius: 8px;
+  justify-content: center;
+  align-items: center;
+}
+
+.agent-card .user_name {
+  font-size: 20px;
+  font-weight: 600;
+}
+.agent-card .user_id {
+  font-size: 12px;
+  color: var(--main-color);
+  margin-bottom: 10px;
+}
+.agent-card .user_id span {
+  color: var(--main-color);
+}
+.agent-card .text {
+  font-size: 13px;
+  font-weight: 400;
+  margin-bottom: 0px;
+  color: #444;
+}

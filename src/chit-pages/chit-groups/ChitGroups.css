@@ -1,0 +1,185 @@
+.chit_batch .batch-title {
+  font-size: 18px;
+}
+.chit_batch .filter-btns {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.chit_batch .filter-btns .filt-btn {
+  background: #fff;
+  padding: 10px 15px;
+  font-size: 12px;
+  color: #444;
+  border: 1px solid #efefef;
+  box-shadow: 0 10px 26px #00000014;
+}
+.chit_batch .filter-btns .filt-btn i {
+  margin-left: 5px;
+  font-size: 11px;
+}
+.chit_batch .filter-btns .filt-btn.active {
+  background: var(--main-color);
+  color: #fff;
+  border-color: var(--main-color);
+}
+
+.batch-card {
+  background: #fff;
+  padding: 20px;
+  box-shadow: 0 10px 26px #00000014;
+  border-radius: 10px;
+}
+.batch-card .batch-header .quick-edit {
+  text-align: right;
+  color: #444;
+}
+.batch-card .batch-header .batch-title {
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+.batch-card .batch-header .batch-status {
+  color: #444;
+  text-transform: uppercase;
+  font-size: 11px;
+  position: relative;
+  padding-left: 10px;
+}
+.batch-card .batch-header .batch-status::after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.batch-card .batch-header .batch-status.active::after {
+  background: green;
+}
+.batch-card .batch-header .batch-status.pending::after {
+  background: rgb(207, 190, 1);
+}
+.batch-card .batch-header .batch-status.completed::after {
+  background: rgb(0, 116, 218);
+}
+.batch-card .batch-header .batch-status.open::after {
+  background: green;
+}
+.batch-card .batch-header .batch-status.close::after {
+  background: rgb(207, 1, 1);
+}
+.batch-card .batch-header .dropdown .dropdown-toggle:after {
+  border: none;
+}
+.batch-card .batch-header .dropdown .dropdown-toggle {
+  padding: 0px;
+  outline: none;
+}
+.batch-card .batch-header .dropdown .dropdown-toggle:focus {
+  box-shadow: none;
+  border: none !important;
+}
+.batch-card .batch-header .dropdown .dropdown-menu {
+  width: 100%;
+  min-width: fit-content;
+  inset: 0px auto auto -60px !important;
+  box-shadow: 0 10px 26px #00000014;
+  padding: 0px;
+}
+.batch-card .batch-header .dropdown .dropdown-menu .dropdown-item {
+  font-size: 12px;
+  margin-bottom: 0px;
+  padding: 5px;
+}
+.batch-card .batch-header .dropdown .dropdown-menu .dropdown-item i {
+  margin-right: 5px;
+}
+.batch-card .batch-body {
+  padding-top: 10px;
+}
+.batch-card .batch-body .batch-subtitle {
+  font-size: 14px;
+  color: #444;
+  margin-bottom: 0px;
+}
+.batch-card .batch-body .batch-count {
+  font-size: 14px;
+  color: #000;
+}
+.batch-card .batch-body .detail-btn {
+  width: 100%;
+  border: 1px solid #ccc;
+  background: transparent;
+  color: #333;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 20px;
+}
+.common-bg {
+  background: var(--gradient-color);
+}
+.common {
+  color: var(--main-color) !important;
+}
+
+.plan_tabs {
+  background: #efefef;
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+  padding: 3px !important;
+  display: inline-block;
+}
+
+.plan_tabs {
+  list-style-type: none;
+  display: flex;
+  place-items: center;
+  gap: 5px;
+  margin-bottom: 0;
+  padding-left: 0px;
+}
+.plan_tabs .tab_items {
+  background: #fff;
+  padding: 10px 15px;
+  font-size: 14px;
+  flex: 1 1 auto;
+  border-radius: 5px;
+  outline: none;
+  border: none;
+}
+.plan_tabs .tab_items small {
+  font-size: 10px;
+  color: #444;
+}
+.plan_tabs .tab_items.active {
+  background: var(--gradient-color);
+  color: #fff;
+}
+.plan_tabs .tab_items.active small {
+  color: #fff;
+}
+.plan-item-list {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 25px;
+}
+.plan-item-list .plan-item {
+  flex: 1 1 0;
+}
+.plan-item-list .plan-item .plan-btn {
+  background: #efefef;
+  padding: 10px 20px;
+  border: 1px solid #dee2e6;
+  font-size: 14px;
+  border-radius: 5px;
+  width: 100%;
+}
+.plan-item-list .plan-item .btn-check:checked ~ .plan-btn,
+.plan-item-list .plan-item .plan-btn:hover {
+  background: var(--gradient-color);
+  color: #fff;
+  border-color: var(--main-color);
+}

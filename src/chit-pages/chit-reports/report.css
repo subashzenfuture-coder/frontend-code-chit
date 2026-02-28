@@ -1,0 +1,243 @@
+.info-card {
+  background: #ffffff;
+  border-radius: 5px;
+  padding: 10px 24px;
+  border-left: 3px solid #8b0000;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  max-width: 100%;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.info-grid div {
+  margin: 0px 0 10px;
+  font-size: 13px;
+  color: #374151;
+}
+
+.info-grid div:last-child {
+  margin-bottom: 0px;
+}
+
+.info-grid strong {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.status {
+  padding: 4px 10px !important;
+  border-radius: 12px;
+  font-size: 10px;
+  line-height: inherit;
+  font-weight: 600;
+  text-transform: lowercase;
+}
+
+.status.active {
+  background-color: #0f9d58;
+  color: #ffffff;
+}
+.status.completed {
+  background-color: #0f589d;
+  color: #ffffff;
+}
+.status.pending {
+  background-color: #9d8d0f;
+  color: #ffffff;
+}
+
+.filter-wrapper {
+  background: #fff;
+  box-shadow: 0 10px 26px #00000014;
+  padding: 15px;
+  margin-top: 15px;
+  border-radius: 10px;
+}
+.filter-wrapper .filter-header {
+  font-size: 14px;
+}
+.filter-wrapper .search-input {
+  background: #efefef;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+}
+.filter-wrapper .form-select,
+.filter-wrapper .form-control {
+  font-size: 14px;
+  padding: 10px;
+  border-radius: 5px;
+  border: transparent;
+  background-color: #efefef;
+}
+
+.filter-calender label {
+  width: -webkit-fill-available;
+  font-size: 14px;
+  color: var(--main-color);
+}
+
+.filter-calender .form-control {
+  font-size: 14px;
+}
+
+.user_detail .info_box {
+  background: #fff;
+  padding: 18px;
+  box-shadow: 0 10px 26px #00000014;
+  border-radius: 10px;
+}
+.user_detail .info_box .user_icon {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto;
+  background: #efefef;
+  color: #fff;
+  font-size: 36px;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: #8b0000;
+  display: flex;
+  border-radius: 8px;
+  justify-content: center;
+  align-items: center;
+}
+.user_detail .info_box .user_name {
+  font-size: 20px;
+  font-weight: 600;
+}
+.user_detail .info_box .user_id {
+  font-size: 12px;
+  color: #444;
+  margin-bottom: 0px;
+}
+.user_detail .info_box .user_id span {
+  color: var(--main-color);
+}
+.user_detail .info_detail .title {
+  font-size: 12px;
+  color: #666;
+}
+.user_detail .info_detail .title i {
+  margin-right: 5px;
+}
+.user_detail .info_detail .text {
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 0px;
+}
+
+.user_detail .stack_box {
+  background: #fff;
+  padding: 21px 18px;
+  box-shadow: 0 10px 26px #00000014;
+  border-radius: 10px;
+}
+.user_detail .stack_box .box_icon .icon {
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  line-height: 45px;
+  font-size: 18px;
+  border-radius: 5px;
+}
+.user_detail .stack_box .box_icon .icon.batch {
+  background-color: rgba(0, 136, 255, 0.19);
+  color: rgb(0, 136, 255);
+}
+.user_detail .stack_box .box_icon .icon.plan {
+  background-color: rgba(123, 0, 129, 0.19);
+  color: rgb(131, 0, 147);
+}
+.user_detail .stack_box .box_text {
+  font-size: 13px;
+  color: #444;
+  margin-bottom: 8px;
+}
+.user_detail .stack_box .box_title {
+  font-size: 16px;
+  font-weight: 500;
+  color: #000;
+  margin-bottom: 0px;
+}
+
+.user_detail .total_investment_box {
+  background: var(--gradient-color);
+  padding: 21px 18px;
+  box-shadow: 0 10px 26px #00000014;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+}
+.user_detail .total_investment_box::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: url(../../assets/images/abstract.png);
+  background-size: cover;
+  opacity: 0.04;
+}
+.user_detail .total_investment_box .box_icon .icon {
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  line-height: 45px;
+  font-size: 18px;
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.19);
+  color: rgb(255, 255, 255);
+}
+.user_detail .total_investment_box .box_text {
+  font-size: 13px;
+  color: #fff;
+  margin-bottom: 8px;
+}
+.user_detail .total_investment_box .box_title {
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+  margin-bottom: 0px;
+}
+.user_detail .refrence_detail {
+  background: #fff;
+  padding: 15px 18px;
+  box-shadow: 0 10px 26px #00000014;
+  border-radius: 10px;
+}
+.user_detail .refrence_detail .icon {
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  line-height: 45px;
+  font-size: 18px;
+  border-radius: 5px;
+  background-color: rgba(227, 227, 227, 0.813);
+  color: rgb(0, 0, 0);
+}
+.user_detail .refrence_detail .box_text {
+  font-size: 14px;
+  color: #000;
+  margin-bottom: 8px;
+}
+.user_detail .refrence_detail .box_title {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--main-color);
+  margin-bottom: 0px;
+}
+.detail-btn {
+  width: 100%;
+  border: 1px solid #ccc !important;
+  background: transparent;
+  color: #333;
+  font-size: 13px !important;
+  font-weight: 500;
+  padding: 10px 20px !important;
+}
