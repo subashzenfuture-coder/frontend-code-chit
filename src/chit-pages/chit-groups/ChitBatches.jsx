@@ -3,11 +3,25 @@ import "./ChitGroups.css";
 import { Link } from "react-router-dom";
 
 export const ChitBatches = () => {
+  const [search, setSearch] = useState("");
 
-  const [search , setSearch] = useState("")
+  const [batchData, setBatchData] = useState({
+    batch_name: "",
+    batch_duration: "",
+    start_date: "",
+    end_date: "",
+  });
 
+  const handleInput = (e) => {
+    let { name, value } = e.target;
 
- 
+    setBatchData((prev) => {
+      return {
+        ...prev,
+        [name]: value,
+      };
+    });
+  };
 
   return (
     <>
@@ -339,39 +353,47 @@ export const ChitBatches = () => {
                       <label htmlFor="" className="form-label">
                         Batch Name
                       </label>
-                      <input type="text" className="form-control" placeholder="Batch Name" />
+                      <input
+                        type="text"
+                        name="batch_name"
+                        value={batchData.batch_name}
+                        onChange={handleInput}
+                        className="form-control"
+                        placeholder="Batch Name"
+                      />
                     </div>
                     <div className="col-lg-6">
                       <label htmlFor="" className="form-label">
-                        Batch ID
+                        Batch Duration
                       </label>
-                      <input type="text" className="form-control" placeholder="Batch ID" readOnly />
+                      <input
+                        type="text"
+                        name="batch_duration"
+                        onChange={handleInput}
+                        value={batchData.batch_duration}
+                        className="form-control"
+
+                      />
                     </div>
 
                     <div className="col-lg-6">
                       <label htmlFor="" className="form-label">
-                        Batch Start Date / Time
+                        Batch Start Date
                       </label>
                       <div className="row gy-4">
-                        <div className="col-md-6">
-                          <input type="date" className="form-control" />
-                        </div>
-                        <div className="col-md-6">
-                          <input type="time" className="form-control" />
+                        <div className="col-md-12">
+                          <input type="date" name="start_date" value={batchData.start_date} onChange={handleInput} className="form-control" />
                         </div>
                       </div>
                     </div>
 
                     <div className="col-lg-6">
                       <label htmlFor="" className="form-label">
-                        Batch default Closing Date / Time
+                        Batch default Closing Date
                       </label>
                       <div className="row gy-4">
-                        <div className="col-md-6">
-                          <input type="date" className="form-control" readOnly/>
-                        </div>
-                        <div className="col-md-6">
-                          <input type="time" className="form-control" readOnly/>
+                        <div className="col-md-12">
+                          <input type="date" name="end_date" value={batchData.end_date} onChange={handleInput} className="form-control" />
                         </div>
                       </div>
                     </div>

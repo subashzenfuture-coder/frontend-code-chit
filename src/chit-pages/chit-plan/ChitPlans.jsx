@@ -64,7 +64,7 @@ export const ChitPlans = () => {
 
     try {
       if (editPlanId) {
-        // ✏️ UPDATE
+
         await updatePlans(editPlanId, {
           plan_name: planName,
           plan_duration: planDuration,
@@ -72,7 +72,7 @@ export const ChitPlans = () => {
 
         toast.success("Plan Updated Successfully");
       } else {
-        // ➕ ADD
+
         await createPlans({
           plan_name: planName,
           plan_duration: planDuration,
@@ -195,6 +195,7 @@ export const ChitPlans = () => {
                           <input
                             type="text"
                             className="form-control"
+                            placeholder="plan name"
                             value={planName}
                             onChange={(e) => setPlanName(e.target.value)}
                           />
@@ -207,6 +208,7 @@ export const ChitPlans = () => {
                           <input
                             type="text"
                             className="form-control"
+                            placeholder="plan duration"
                             value={planDuration}
                             onChange={(e) =>
                               setPlanDuration(e.target.value)

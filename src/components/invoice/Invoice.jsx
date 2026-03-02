@@ -1,6 +1,3 @@
-
-
-
 import "./invoice.css";
 import logo1 from "../../assets/images/logo-1.png";
 import logo2 from "../../assets/images/logo-2.png";
@@ -144,14 +141,15 @@ const calculated = products.reduce(
     const lineFinalTotal = finalRate * qty;   // after discount
 
     const cgst=Number(p.cgst_amount || 0);
-    console.log("CGST:", cgst);
+    // console.log("CGST:", cgst);
     const sgst=Number(p.sgst_amount || 0);
-    console.log("SGST:", sgst);
+    // console.log("SGST:", sgst);
     const gsttotal=Number(p.gst_total_amount || 0);
-    console.log("GST Total:", gsttotal);
+    // console.log("GST Total:", gsttotal);
     acc.subtotal += lineSubtotal;
     acc.totalDiscount += discount;
     acc.totalAfterDiscount += lineFinalTotal;
+    acc.totalQuantity += qty;
 
     //gst calculation
     acc.totalCGST += cgst;
@@ -164,6 +162,7 @@ const calculated = products.reduce(
   {
     subtotal: 0,
     totalDiscount: 0,
+    totalQuantity: 0,
     totalAfterDiscount: 0,
     totalCGST: 0,
     totalSGST: 0,
@@ -205,6 +204,7 @@ const grandTotal = calculated.totalAfterDiscount;
                   <br />
                   {company?.district}, {company?.state}, {company?.pincode}
                 </p>
+                <p className="py-1"><i class="bi bi-whatsapp"></i>&nbsp;<i class="bi bi-telephone"></i>&nbsp;7200002112 , 7200005786,9865065260</p>
               </div>
             </div>
 
@@ -295,8 +295,9 @@ const grandTotal = calculated.totalAfterDiscount;
               <th width="10%">HSN</th>
               <th width="10%">RATE</th>
               <th width="10%">Discount</th>
-              <th width="12%">Final Rate</th>
               <th width="6%">QTY</th>
+              <th width="12%">Final Rate</th>
+              
 
               <th width="12%" className="border-end-0">
                 AMOUNT
@@ -321,12 +322,13 @@ const grandTotal = calculated.totalAfterDiscount;
                     ? `₹${Number(p.discount_amount).toFixed(2)}`
                     : "—"}
                 </td>
+                <td width="6%">{p.quantity}</td>
+
                  {/* FINAL RATE */}
                   <td width="12%">
                     ₹{Number(p.final_rate || p.rate || 0).toFixed(2)}
                   </td>
-                <td width="6%">{p.quantity}</td>
-
+                
                 <td width="12%">₹{Number(p.total).toFixed(2)}</td>
               </tr>
             ))}
@@ -354,24 +356,25 @@ const grandTotal = calculated.totalAfterDiscount;
               <tr>
                 <td colSpan="4" width="60%"></td>
                 <td width="10%">₹{calculated.totalDiscount.toFixed(2)}</td>
-                <td width="18%">Subtotal</td>
+                <td width="6%">{calculated.totalQuantity}</td>
+                <td width="12%">Subtotal</td>
                 <td width="12%"> ₹{calculated.totalAfterDiscount.toFixed(2)}</td>
               </tr>
 
               <tr>
                 {/* LEFT — DISCLAIMER */}
 
-                <td colSpan="5" rowSpan="1" style={{ width: "69%" }}>
+                <td colSpan="6" rowSpan="1" style={{ width: "76%" }}>
                   <h5 style={{ fontSize: "20px", margin: 0 }}>Disclaimer</h5>
                   <p style={{ fontWeight: 400, margin: "3px 0" }}>{company?.disclaimer}</p>
                 </td>
 
                 {/* RIGHT — TAX TABLE */}
-                <td colSpan="3" style={{ padding: 0, width: "31%" }}>
+                <td colSpan="3" style={{ padding: 0, width: "24%" }}>
                   <table style={{ width: "100%", borderCollapse: "collapse" }}>
                     <tbody>
                       <tr className="border-none">
-                        <td style={{ border: "none", padding: "4px", width: "60%" }}>GST </td>
+                        <td style={{ border: "none", padding: "4px", width: "50%" }}>GST </td>
                         <td
                           style={{
                             border: "none",
@@ -385,7 +388,7 @@ const grandTotal = calculated.totalAfterDiscount;
                       </tr>
 
                       <tr>
-                        <td style={{ border: "none", padding: "4px", width: "60%" }}>CGST </td>
+                        <td style={{ border: "none", padding: "4px", width: "50%" }}>CGST </td>
                         <td
                           style={{
                             border: "none",
@@ -397,7 +400,7 @@ const grandTotal = calculated.totalAfterDiscount;
                       </tr>
 
                       <tr>
-                        <td style={{ border: "none", padding: "4px", width: "60%" }}>SGST </td>
+                        <td style={{ border: "none", padding: "4px", width: "50%" }}>SGST </td>
                         <td
                           style={{
                             border: "none",
@@ -414,23 +417,23 @@ const grandTotal = calculated.totalAfterDiscount;
 
               <tr>
                 <td
-                  colSpan="5"
+                  colSpan="6"
                   style={{
                     color: "#a52a2a",
-                    width: "70%",
+                    width: "76%",
                   }}>
                   {company?.instruction}
                 </td>
 
-                <td style={{ fontSize: "16px", width: "15%" }}>Total</td>
-                <td className="grand-total" style={{ width: "15%" }}>
+                <td style={{ fontSize: "16px", width: "12%" }}>Total</td>
+                <td className="grand-total" style={{ width: "12%" }}>
                  ₹{grandTotal.toFixed(2)}
                 </td>
               </tr>
              
 
               <tr>
-                <td colSpan="5">
+                <td colSpan="6">
                   <div style={{ display: "flex", alignItems: "center" }}>
                     <div style={{ margin: "0px 30px" }}>
                       {/* {billing.qr_code_image && <img src={`${BASE_URL}${billing.qr_code_image}`} style={{ width: "80px" }} alt="Bank QR" />} */}
@@ -459,7 +462,7 @@ const grandTotal = calculated.totalAfterDiscount;
                   </div>
                 </td>
 
-                <td colSpan="3">
+                <td colSpan="2">
                   <div className="signature">
                     <h6 style={{ margin: "2px 0", fontSize: "16px" }}>For DHEERAN TRADER</h6>
                     <p style={{ margin: "2px 0" }}>Proprietor</p>

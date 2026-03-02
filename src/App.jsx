@@ -124,8 +124,9 @@ const DashboardLayout = () => (
         </Routes>
         <ChitRoutes />
       </div>
-      <Footer />
+    
     </div>
+      <Footer />
     <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} newestOnTop closeOnClick pauseOnHover theme="light" />
   </>
 );
