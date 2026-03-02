@@ -45,7 +45,7 @@ export const ProductBilling = () => {
   const [finalPrice, setFinalPrice] = useState("");
 
   // const [advancePaid, setAdvancePaid] = useState(0);
-  const [invoicePreview, setInvoicePreview] = useState("");
+
   // const [gstNumber, setGstNumber] = useState("");
   const [companyGSTNumber, setCompanyGSTNumber] = useState("");
   const [customerGSTNumber, setCustomerGSTNumber] = useState("");
@@ -64,7 +64,7 @@ export const ProductBilling = () => {
   const [paymentMode, setPaymentMode] = useState("cash");
   const [errors, setErrors] = useState({});
   const advancePaid = cashAmount + upiAmount + chequeAmount;
-  
+
   useEffect(() => {
     if (!id) return;
 
@@ -100,8 +100,6 @@ export const ProductBilling = () => {
         setVehicleNumber(data.vehicle_number || "");
         setEwayBillNumber(data.eway_bill_number || "");
 
-        setInvoicePreview(data.invoice_number);
-
         const mappedProducts = data.products.map((p) => ({
           product_id: p.product_id,
           product_name: p.product_name,
@@ -129,9 +127,9 @@ export const ProductBilling = () => {
         const custRes = await getCustomers();
         const empRes = await getEmployees();
         setEmployees(Array.isArray(empRes) ? empRes : []);
-       // const prodRes = await getProducts();
-const prodRes = await getProducts();
-console.log("Products API Response:", prodRes);
+        // const prodRes = await getProducts();
+        const prodRes = await getProducts();
+        console.log("Products API Response:", prodRes);
         // 🔥 NORMALIZE customer name
         const normalizedCustomers = Array.isArray(custRes)
           ? custRes.map((c) => ({
@@ -160,10 +158,10 @@ console.log("Products API Response:", prodRes);
               stock: Number(p.stock || 0),
 
               // 🔥 ADD THESE LINES
-      hsn_code: p.hsn_code,
-      cgst_rate: Number(p.cgst_rate || 0),
-      sgst_rate: Number(p.sgst_rate || 0),
-      gst_total_rate: Number(p.gst_total_rate || 0),
+              hsn_code: p.hsn_code,
+              cgst_rate: Number(p.cgst_rate || 0),
+              sgst_rate: Number(p.sgst_rate || 0),
+              gst_total_rate: Number(p.gst_total_rate || 0),
             }))
           : [];
 
@@ -175,13 +173,6 @@ console.log("Products API Response:", prodRes);
 
     loadData();
   }, []);
-  useEffect(() => {
-    if (isEdit) return; // ❌ don’t change invoice on edit
-
-    const year = new Date().getFullYear();
-    const random = Math.floor(Math.random() * 9000) + 1000;
-    setInvoicePreview(`INV-${year}-${random}`);
-  }, [isEdit]);
 
   useEffect(() => {
     const loadBanks = async () => {
@@ -196,10 +187,7 @@ console.log("Products API Response:", prodRes);
     loadBanks();
   }, []);
 
-  const subtotal = billProducts.reduce(
-  (sum, p) => sum + p.sell_qty * (p.final_rate || p.rate),
-  0
-);
+  const subtotal = billProducts.reduce((sum, p) => sum + p.sell_qty * (p.final_rate || p.rate), 0);
 
   // const halfGstPercent = gstPercent / 2;
 
@@ -208,7 +196,7 @@ console.log("Products API Response:", prodRes);
 
   // const totalTax = cgstAmount + sgstAmount;
   // const grandTotal = subtotal + totalTax;
-  const grandTotal=subtotal;
+  const grandTotal = subtotal;
 
   const today = new Date().toLocaleDateString("en-IN", {
     day: "2-digit",
@@ -244,45 +232,42 @@ console.log("Products API Response:", prodRes);
 
     setBillProducts((prev) => {
       const existingIndex = prev.findIndex((p) => p.product_id === selectedProduct.id);
-       const appliedRate = Number(finalPrice || selectedProduct.rate);
+      const appliedRate = Number(finalPrice || selectedProduct.rate);
 
       // 🔁 merge if already exists
       if (existingIndex !== -1) {
         return prev.map((item, index) =>
           index === existingIndex
-           ? {
-              ...item,
-              sell_qty: item.sell_qty + qty,
-              stock: item.stock - qty,
-              final_rate: appliedRate,
-            }
-
+            ? {
+                ...item,
+                sell_qty: item.sell_qty + qty,
+                stock: item.stock - qty,
+                final_rate: appliedRate,
+              }
             : item,
         );
       }
 
-     
       return [
-  ...prev,
-  {
-    product_id: selectedProduct.id,
-    product_name: selectedProduct.product_name,
-    brand: selectedProduct.brand,
-    category: selectedProduct.category,
-    product_quantity: selectedProduct.quantity,
-    sell_qty: qty,
-    stock: selectedProduct.stock - qty,
-    rate: selectedProduct.rate,
-    final_rate: appliedRate,
+        ...prev,
+        {
+          product_id: selectedProduct.id,
+          product_name: selectedProduct.product_name,
+          brand: selectedProduct.brand,
+          category: selectedProduct.category,
+          product_quantity: selectedProduct.quantity,
+          sell_qty: qty,
+          stock: selectedProduct.stock - qty,
+          rate: selectedProduct.rate,
+          final_rate: appliedRate,
 
-    // ✅ ADD THESE
-    hsn_code: selectedProduct.hsn_code,
-    cgst_rate: Number(selectedProduct.cgst_rate || 0),
-    sgst_rate: Number(selectedProduct.sgst_rate || 0),
-    gst_total_rate: Number(selectedProduct.gst_total_rate || 0),
-  },
-];
-
+          // ✅ ADD THESE
+          hsn_code: selectedProduct.hsn_code,
+          cgst_rate: Number(selectedProduct.cgst_rate || 0),
+          sgst_rate: Number(selectedProduct.sgst_rate || 0),
+          gst_total_rate: Number(selectedProduct.gst_total_rate || 0),
+        },
+      ];
     });
 
     // 🔻 reduce stock from master list
@@ -303,62 +288,55 @@ console.log("Products API Response:", prodRes);
     setBillProducts((prev) => prev.filter((_, i) => i !== index));
   };
 
-  
-const ensureCustomerExists = async () => {
-  if (selectedCustomerId) return selectedCustomerId;
+  const ensureCustomerExists = async () => {
+    if (selectedCustomerId) return selectedCustomerId;
 
-  const existing = customers.find(
-    (c) => String(c.phone) === String(customerPhone)
-  );
+    const existing = customers.find((c) => String(c.phone) === String(customerPhone));
 
-  if (existing) {
-    const existingName = (existing.name || "").trim().toLowerCase();
-    const enteredName = (customerName || "").trim().toLowerCase();
+    if (existing) {
+      const existingName = (existing.name || "").trim().toLowerCase();
+      const enteredName = (customerName || "").trim().toLowerCase();
 
-    // 🚨 If phone exists but name different → throw error
-    if (existingName !== enteredName) {
-      throw new Error("Customer already exists with this phone number");
+      // 🚨 If phone exists but name different → throw error
+      if (existingName !== enteredName) {
+        throw new Error("Customer already exists with this phone number");
+      }
+
+      return existing.id; // same name, safe
     }
 
-    return existing.id; // same name, safe
-  }
+    // ➕ Create only if phone not found
+    const [first_name, ...rest] = customerName.trim().split(" ");
+    const last_name = rest.join(" ");
 
-  // ➕ Create only if phone not found
-  const [first_name, ...rest] = customerName.trim().split(" ");
-  const last_name = rest.join(" ");
+    const res = await createCustomer({
+      first_name,
+      last_name,
+      phone: customerPhone,
+      address: customerAddress || null, // ✅ ADD THIS
+    });
 
-  const res = await createCustomer({
-  first_name,
-  last_name,
-  phone: customerPhone,
-  address: customerAddress || null,   // ✅ ADD THIS
-});
+    const customer = res.data.customer;
 
+    setCustomers((prev) => [
+      ...prev,
+      {
+        ...customer,
+        name: `${customer.first_name} ${customer.last_name}`.trim(),
+        address: customer.address,
+      },
+    ]);
 
-  const customer = res.data.customer;
+    return customer.id;
+  };
 
-  setCustomers((prev) => [
-  ...prev,
-  {
-    ...customer,
-    name: `${customer.first_name} ${customer.last_name}`.trim(),
-    address: customer.address,
-  },
-]);
+  const ensureEmployeeExists = async () => {
+    if (!selectedEmployeeId) {
+      throw new Error("Please select staff from suggestion list");
+    }
 
-
-  return customer.id;
-};
-
-
-  
-const ensureEmployeeExists = async () => {
-  if (!selectedEmployeeId) {
-    throw new Error("Please select staff from suggestion list");
-  }
-
-  return selectedEmployeeId;
-};
+    return selectedEmployeeId;
+  };
 
   /* ================= SAVE ================= */
 
@@ -415,7 +393,7 @@ const ensureEmployeeExists = async () => {
 
     try {
       const customer_id = await ensureCustomerExists();
-const staff_id = await ensureEmployeeExists();
+      const staff_id = await ensureEmployeeExists();
 
       const payload = {
         customer_id,
@@ -429,25 +407,24 @@ const staff_id = await ensureEmployeeExists();
         staff_name: staffName,
         staff_phone: staffPhone || null,
         bank_id: selectedBankId,
-    //    tax_gst_percent: gstPercent,
+        //    tax_gst_percent: gstPercent,
         advance_paid: advancePaid,
         cash_amount: cashAmount,
         upi_amount: upiAmount,
         cheque_amount: chequeAmount,
-     products: validProducts.map((p) => ({
-  product_id: p.product_id,
-  quantity: Number(p.sell_qty),
-  product_quantity: p.product_quantity,
-  rate: Number(p.rate),
-  final_rate: Number(p.final_rate || p.rate),
+        products: validProducts.map((p) => ({
+          product_id: p.product_id,
+          quantity: Number(p.sell_qty),
+          product_quantity: p.product_quantity,
+          rate: Number(p.rate),
+          final_rate: Number(p.final_rate || p.rate),
 
-   // ✅ SEND GST DATA
-  hsn_code: p.hsn_code,
-  cgst_rate: p.cgst_rate,
-  sgst_rate: p.sgst_rate,
-  gst_total_rate: p.gst_total_rate,
-})),
-
+          // ✅ SEND GST DATA
+          hsn_code: p.hsn_code,
+          cgst_rate: p.cgst_rate,
+          sgst_rate: p.sgst_rate,
+          gst_total_rate: p.gst_total_rate,
+        })),
       };
 
       let billingId = id;
@@ -462,34 +439,28 @@ const staff_id = await ensureEmployeeExists();
 
       toast.success("Invoice saved successfully");
       navigate(`/invoice/print/${billingId}`);
- } catch (err) {
-  console.error("Billing Save Error:", err);
-  toast.error("Please correct the highlighted fields.");
-  const message = err?.response?.data?.message || err.message;
+    } catch (err) {
+      console.error("Billing Save Error:", err);
+      toast.error("Please correct the highlighted fields.");
+      const message = err?.response?.data?.message || err.message;
 
-  // 🔥 FIELD MAPPING LOGIC
-  if (message.includes("staff")) {
-    setErrors((prev) => ({ ...prev, staffName: message }));
-  }
-  else if (message.includes("Customer")) {
-    setErrors((prev) => ({ ...prev, customerName: message }));
-  }
-  else if (message.includes("bank")) {
-    setErrors((prev) => ({ ...prev, bank: message }));
-  }
-  else if (message.includes("GST")) {
-    setErrors((prev) => ({ ...prev, gst: message }));
-  }
-  else if (message.includes("stock")) {
-    setErrors((prev) => ({ ...prev, products: message }));
-  }
-  else if (message.includes("Payment")) {
-    setErrors((prev) => ({ ...prev, payment: message }));
-  }
-  else {
-    toast.error(message);
-  }
-}
+      // 🔥 FIELD MAPPING LOGIC
+      if (message.includes("staff")) {
+        setErrors((prev) => ({ ...prev, staffName: message }));
+      } else if (message.includes("Customer")) {
+        setErrors((prev) => ({ ...prev, customerName: message }));
+      } else if (message.includes("bank")) {
+        setErrors((prev) => ({ ...prev, bank: message }));
+      } else if (message.includes("GST")) {
+        setErrors((prev) => ({ ...prev, gst: message }));
+      } else if (message.includes("stock")) {
+        setErrors((prev) => ({ ...prev, products: message }));
+      } else if (message.includes("Payment")) {
+        setErrors((prev) => ({ ...prev, payment: message }));
+      } else {
+        toast.error(message);
+      }
+    }
   };
 
   const resetBillingPage = () => {
@@ -554,7 +525,7 @@ const staff_id = await ensureEmployeeExists();
 
         bank_id: selectedBankId || null, // ✅ allow null in draft
 
-     //   tax_gst_percent: gstPercent,
+        //   tax_gst_percent: gstPercent,
         advance_paid: Number(advancePaid),
         cash_amount: Number(cashAmount),
         upi_amount: Number(upiAmount),
@@ -564,18 +535,17 @@ const staff_id = await ensureEmployeeExists();
         print_required: false,
 
         products: billProducts.map((p) => ({
-        product_id: p.product_id,
-        quantity: Number(p.sell_qty),
-        product_quantity: p.product_quantity,
-        rate: Number(p.rate),
-        final_rate: Number(p.final_rate || p.rate),
-         // ✅ SEND GST DATA
-  hsn_code: p.hsn_code,
-  cgst_rate: p.cgst_rate,
-  sgst_rate: p.sgst_rate,
-  gst_total_rate: p.gst_total_rate,
-      })),
-
+          product_id: p.product_id,
+          quantity: Number(p.sell_qty),
+          product_quantity: p.product_quantity,
+          rate: Number(p.rate),
+          final_rate: Number(p.final_rate || p.rate),
+          // ✅ SEND GST DATA
+          hsn_code: p.hsn_code,
+          cgst_rate: p.cgst_rate,
+          sgst_rate: p.sgst_rate,
+          gst_total_rate: p.gst_total_rate,
+        })),
       };
 
       if (isEdit) {
@@ -586,34 +556,28 @@ const staff_id = await ensureEmployeeExists();
 
       toast.success("Draft saved successfully");
       resetBillingPage();
-  } catch (err) {
-  console.error("Billing Save Error:", err);
-  toast.error("Please correct the highlighted fields.");
-  const message = err?.response?.data?.message || err.message;
+    } catch (err) {
+      console.error("Billing Save Error:", err);
+      toast.error("Please correct the highlighted fields.");
+      const message = err?.response?.data?.message || err.message;
 
-  // 🔥 FIELD MAPPING LOGIC
-  if (message.includes("staff")) {
-    setErrors((prev) => ({ ...prev, staffName: message }));
-  }
-  else if (message.includes("Customer")) {
-    setErrors((prev) => ({ ...prev, customerName: message }));
-  }
-  else if (message.includes("bank")) {
-    setErrors((prev) => ({ ...prev, bank: message }));
-  }
-  else if (message.includes("GST")) {
-    setErrors((prev) => ({ ...prev, gst: message }));
-  }
-  else if (message.includes("stock")) {
-    setErrors((prev) => ({ ...prev, products: message }));
-  }
-  else if (message.includes("Payment")) {
-    setErrors((prev) => ({ ...prev, payment: message }));
-  }
-  else {
-    toast.error(message);
-  }
-}
+      // 🔥 FIELD MAPPING LOGIC
+      if (message.includes("staff")) {
+        setErrors((prev) => ({ ...prev, staffName: message }));
+      } else if (message.includes("Customer")) {
+        setErrors((prev) => ({ ...prev, customerName: message }));
+      } else if (message.includes("bank")) {
+        setErrors((prev) => ({ ...prev, bank: message }));
+      } else if (message.includes("GST")) {
+        setErrors((prev) => ({ ...prev, gst: message }));
+      } else if (message.includes("stock")) {
+        setErrors((prev) => ({ ...prev, products: message }));
+      } else if (message.includes("Payment")) {
+        setErrors((prev) => ({ ...prev, payment: message }));
+      } else {
+        toast.error(message);
+      }
+    }
   };
 
   const handleDiscard = () => {
@@ -653,8 +617,7 @@ const staff_id = await ensureEmployeeExists();
       setCustomerAddress(customer.address || "");
     }
   }, [customers, selectedCustomerId, isEdit]);
-  
- 
+
   return (
     <div className="product-billing">
       <div className="row gy-4 gx-0">
@@ -670,94 +633,81 @@ const staff_id = await ensureEmployeeExists();
                   </h5>
                   <div className="row g-2">
                     {/* STAFF NAME */}
-               <div className="col-md-6 position-relative">
-  <label className="form-label">Staff Name</label>
- <input
-  className={`form-control ${errors.staffName ? "is-invalid" : ""}`}
-  value={staffName}
-  onChange={(e) => {
-    const v = e.target.value;
-    setStaffName(v);
-    setSelectedEmployeeId(null);
+                    <div className="col-md-6 position-relative">
+                      <label className="form-label">Staff Name</label>
+                      <input
+                        className={`form-control ${errors.staffName ? "is-invalid" : ""}`}
+                        value={staffName}
+                        onChange={(e) => {
+                          const v = e.target.value;
+                          setStaffName(v);
+                          setSelectedEmployeeId(null);
 
-    // 🔥 Clear error while typing
-    setErrors(prev => ({ ...prev, staffName: null }));
+                          // 🔥 Clear error while typing
+                          setErrors((prev) => ({ ...prev, staffName: null }));
 
-    if (!v) {
-      setStaffSuggestions([]);
-      return;
-    }
+                          if (!v) {
+                            setStaffSuggestions([]);
+                            return;
+                          }
 
-    const matches = employees.filter(
-      (s) =>
-        (s.name || "").toLowerCase().includes(v.toLowerCase()) ||
-        (s.phone || "").includes(v)
-    );
+                          const matches = employees.filter(
+                            (s) => (s.name || "").toLowerCase().includes(v.toLowerCase()) || (s.phone || "").includes(v),
+                          );
 
-    setStaffSuggestions(matches);
-  }}
-/>
+                          setStaffSuggestions(matches);
+                        }}
+                      />
 
-{errors.staffName && (
-  <div className="invalid-feedback d-block">
-    {errors.staffName}
-  </div>
-)}
-  {/* 🔥 ONLY HERE suggestion should render */}
-  {staffSuggestions.length > 0 && (
-    <ul className="list-group position-absolute w-100 z-3 small">
-      {staffSuggestions.map((s) => (
-        <li
-          key={s.id}
-          className="list-group-item list-group-item-action py-1"
-          onClick={() => {
-            setStaffName(s.name || "");
-            setStaffPhone(s.phone || "");
-            setSelectedEmployeeId(s.id);
-            setStaffSuggestions([]);
-          }}
-        >
-          {s.name} – {s.phone}
-        </li>
-      ))}
-    </ul>
-  )}
-</div>
+                      {errors.staffName && <div className="invalid-feedback d-block">{errors.staffName}</div>}
+                      {/* 🔥 ONLY HERE suggestion should render */}
+                      {staffSuggestions.length > 0 && (
+                        <ul className="list-group position-absolute w-100 z-3 small">
+                          {staffSuggestions.map((s) => (
+                            <li
+                              key={s.id}
+                              className="list-group-item list-group-item-action py-1"
+                              onClick={() => {
+                                setStaffName(s.name || "");
+                                setStaffPhone(s.phone || "");
+                                setSelectedEmployeeId(s.id);
+                                setStaffSuggestions([]);
+                              }}>
+                              {s.name} – {s.phone}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
 
                     <div className="col-md-6 position-relative">
-  <label className="form-label">Staff Phone</label>
-  <input
-    className="form-control"
-    value={staffPhone}
-    inputMode="numeric"
-    maxLength={10}
-    onChange={(e) => {
-  let v = e.target.value.replace(/\D/g, "");
-  if (v.length > 10) v = v.slice(0, 10);
+                      <label className="form-label">Staff Phone</label>
+                      <input
+                        className="form-control"
+                        value={staffPhone}
+                        inputMode="numeric"
+                        maxLength={10}
+                        onChange={(e) => {
+                          let v = e.target.value.replace(/\D/g, "");
+                          if (v.length > 10) v = v.slice(0, 10);
 
-  setStaffPhone(v);
-  setSelectedEmployeeId(null);
+                          setStaffPhone(v);
+                          setSelectedEmployeeId(null);
 
-  if (!v) {
-    setStaffSuggestions([]);
-    return;
-  }
+                          if (!v) {
+                            setStaffSuggestions([]);
+                            return;
+                          }
 
-  const matches = employees.filter(
-    (s) =>
-      (s.phone || "").includes(v) ||
-      (s.name || "").toLowerCase().includes(v.toLowerCase())
-  );
+                          const matches = employees.filter(
+                            (s) => (s.phone || "").includes(v) || (s.name || "").toLowerCase().includes(v.toLowerCase()),
+                          );
 
-  setStaffSuggestions(matches);
-}}
-
-    onBlur={() => setTimeout(() => setStaffSuggestions([]), 150)}
-  />
-
- 
-</div>
-
+                          setStaffSuggestions(matches);
+                        }}
+                        onBlur={() => setTimeout(() => setStaffSuggestions([]), 150)}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -796,11 +746,7 @@ const staff_id = await ensureEmployeeExists();
                           }
                         }}
                       />
-                       {errors.customerName && (
-                          <div className="invalid-feedback">
-                            {errors.customerName}
-                          </div>
-                        )}
+                      {errors.customerName && <div className="invalid-feedback">{errors.customerName}</div>}
                       {customerSuggestions.length > 0 && (
                         <ul className="list-group position-absolute w-100 z-3 small">
                           {customerSuggestions.map((c) => (
@@ -830,41 +776,37 @@ const staff_id = await ensureEmployeeExists();
                         inputMode="numeric"
                         pattern="[0-9]*"
                         maxLength={10}
-                       onChange={(e) => {
-                            let v = e.target.value.replace(/\D/g, "");
+                        onChange={(e) => {
+                          let v = e.target.value.replace(/\D/g, "");
 
-                            if (v.length > 10) v = v.slice(0, 10);
+                          if (v.length > 10) v = v.slice(0, 10);
 
-                            setCustomerPhone(v);
+                          setCustomerPhone(v);
 
-                            const existing = customers.find(c => c.phone === v);
+                          const existing = customers.find((c) => c.phone === v);
 
-                            if (existing) {
-                              setCustomerName(existing.name);
-                              setSelectedCustomerId(existing.id);
-                            } else {
-                              setSelectedCustomerId(null);
-                            }
-
-
-                          }}
-
+                          if (existing) {
+                            setCustomerName(existing.name);
+                            setSelectedCustomerId(existing.id);
+                          } else {
+                            setSelectedCustomerId(null);
+                          }
+                        }}
                         onBlur={() => setTimeout(() => setCustomerSuggestions([]), 150)}
                       />
                     </div>
                     {/* CUSTOMER ADDRESS */}
-<div className="col-md-12">
-  <label className="form-label">Customer Address</label>
- <textarea
- className={`form-control ${selectedCustomerId ? "bg-light" : ""}`}
-  rows="2"
-  value={customerAddress}
-  onChange={(e) => setCustomerAddress(e.target.value)}
-  placeholder="Enter customer address"
-  disabled={!!selectedCustomerId}   // ✅ ADD THIS LINE
-/>
-
-</div>
+                    <div className="col-md-12">
+                      <label className="form-label">Customer Address</label>
+                      <textarea
+                        className={`form-control ${selectedCustomerId ? "bg-light" : ""}`}
+                        rows="2"
+                        value={customerAddress}
+                        onChange={(e) => setCustomerAddress(e.target.value)}
+                        placeholder="Enter customer address"
+                        disabled={!!selectedCustomerId} // ✅ ADD THIS LINE
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -878,7 +820,6 @@ const staff_id = await ensureEmployeeExists();
 
                   <div className="row gy-4">
                     <div className="col-md-6">
-                      
                       <select
                         className="form-select"
                         value={selectedProductId}
@@ -886,7 +827,7 @@ const staff_id = await ensureEmployeeExists();
                           const id = e.target.value;
                           setSelectedProductId(id);
 
-                         const prod = productsList.find((p) => Number(p.id) === Number(id));
+                          const prod = productsList.find((p) => Number(p.id) === Number(id));
                           setSelectedProduct(prod || null);
                         }}>
                         <option value="">Select Product</option>
@@ -904,70 +845,66 @@ const staff_id = await ensureEmployeeExists();
                       </select>
                     </div>
 
-<div className="col-md-3">
-  <input
-  type="number"
-  className="form-control readonly"
-  placeholder="Price"
-  value={selectedProduct ? selectedProduct.rate : ""}
-  readOnly
-/>
-</div>
+                    <div className="col-md-3">
+                      <input
+                        type="number"
+                        className="form-control readonly"
+                        placeholder="Price"
+                        value={selectedProduct ? selectedProduct.rate : ""}
+                        readOnly
+                      />
+                    </div>
 
-<div className="col-md-4">
-  <input
-  type="text"
-  className="form-control"
-  placeholder="Qty"
-  value={sellQty}
-  inputMode="numeric"
-  pattern="[0-9]*"
-  onChange={(e) => {
-    const value = e.target.value.replace(/\D/g, ""); // remove non-digits
-    setSellQty(value);
-  }}
-  onKeyDown={(e) => {
-    if (["e", "E", "+", "-", "."].includes(e.key)) {
-      e.preventDefault();
-    }
-  }}
-/>
-</div>
+                    <div className="col-md-4">
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Qty"
+                        value={sellQty}
+                        inputMode="numeric"
+                        pattern="[0-9]*"
+                        onChange={(e) => {
+                          const value = e.target.value.replace(/\D/g, ""); // remove non-digits
+                          setSellQty(value);
+                        }}
+                        onKeyDown={(e) => {
+                          if (["e", "E", "+", "-", "."].includes(e.key)) {
+                            e.preventDefault();
+                          }
+                        }}
+                      />
+                    </div>
 
+                    {/* Final Price (Editable) */}
+                    <div className="col-md-4">
+                      <input
+                        type="number"
+                        className="form-control"
+                        placeholder="Final Price"
+                        inputMode="decimal"
+                        value={finalPrice}
+                        onChange={(e) => {
+                          let value = e.target.value;
 
+                          // allow only numbers and one decimal
+                          if (/^\d*\.?\d{0,2}$/.test(value)) {
+                            setFinalPrice(value);
+                          }
+                        }}
+                        onWheel={(e) => e.target.blur()}
+                        onKeyDown={(e) => {
+                          if (["e", "E", "+", "-"].includes(e.key)) {
+                            e.preventDefault();
+                          }
+                        }}
+                      />
+                    </div>
 
-{/* Final Price (Editable) */}
-<div className="col-md-4">
-  <input
-    type="number"
-    className="form-control"
-    placeholder="Final Price"
-    inputMode="decimal"
-
-    value={finalPrice}
-     onChange={(e) => {
-    let value = e.target.value;
-
-    // allow only numbers and one decimal
-    if (/^\d*\.?\d{0,2}$/.test(value)) {
-      setFinalPrice(value);
-    }
-  }}
-      onWheel={(e) => e.target.blur()} 
-       onKeyDown={(e) => {
-    if (["e", "E", "+", "-"].includes(e.key)) {
-      e.preventDefault();
-    }
-  }}
-  />
-</div>
-
-<div className="col-md-4 ">
-  <button className="main-btn " onClick={handleAddToBill}>
-    <i className="bi bi-plus"></i> Add to Bill
-  </button>
-</div>
-
+                    <div className="col-md-4 ">
+                      <button className="main-btn " onClick={handleAddToBill}>
+                        <i className="bi bi-plus"></i> Add to Bill
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1016,14 +953,9 @@ const staff_id = await ensureEmployeeExists();
                         </tr>
                       )}
                     </tbody>
-                     {errors.products && (
-                    <div className="text-danger mb-2">
-                      {errors.products}
-                    </div>
-                  )}
+                    {errors.products && <div className="text-danger mb-2">{errors.products}</div>}
                   </table>
-                 
-                </div>  
+                </div>
               </div>
             </div>
           </div>
@@ -1033,10 +965,17 @@ const staff_id = await ensureEmployeeExists();
         <div className="col-md-5">
           <div className="product-list-box invoice-box">
             {/* Header */}
-            <div className="row invoice-header">
+            <div className="row align-items-center">
               <div className="col-6 left">
                 <div className="title">INVOICE</div>
-                <div className="invoice-no">{invoicePreview}</div>
+              </div>
+              <div className="col-6 right">
+                <div className="date">Date</div>
+                <div className="due">{today}</div>
+              </div>
+            </div>
+            <div className="row invoice-header">
+              <div className="col-6 left">
                 <input
                   className="form-control form-control-sm mt-2"
                   type="text"
@@ -1065,9 +1004,6 @@ const staff_id = await ensureEmployeeExists();
               </div>
 
               <div className="col-6 right">
-                <div className="date">Date</div>
-                <div className="due">{today}</div>
-
                 <input
                   className="form-control form-control-sm mt-2"
                   placeholder="Customer GST Number"
@@ -1093,7 +1029,7 @@ const staff_id = await ensureEmployeeExists();
                   type="text"
                   value={vehicleNumber}
                   onChange={(e) => setVehicleNumber(e.target.value.toUpperCase())}
-                    onWheel={(e) => e.target.blur()} 
+                  onWheel={(e) => e.target.blur()}
                 />
               </div>
               {/* ================= BANK SELECT ================= */}
@@ -1110,13 +1046,8 @@ const staff_id = await ensureEmployeeExists();
                       {b.bank_name} – {b.account_number}
                     </option>
                   ))}
-               
                 </select>
-                   {errors.bank && (
-                    <div className="invalid-feedback d-block">
-                      {errors.bank}
-                    </div>
-                  )}
+                {errors.bank && <div className="invalid-feedback d-block">{errors.bank}</div>}
               </div>
             </div>
 
@@ -1148,7 +1079,7 @@ const staff_id = await ensureEmployeeExists();
                 <div className="col-4">Product</div>
                 <div className="col-2 center">Qty</div>
                 <div className="col-2 right">Rate</div>
-                 <div className="col-2 right">Discount</div>   {/* NEW */}
+                <div className="col-2 right">Discount</div> {/* NEW */}
                 <div className="col-2 right">Total</div>
               </div>
 
@@ -1156,40 +1087,30 @@ const staff_id = await ensureEmployeeExists();
                 <div className="text-center py-2">No products added</div>
               ) : (
                 billProducts.map((p, i) => (
-               <div className="row product-row align-items-center py-2 border-bottom" key={i}>
-  
-                  <div className="col-4">
-                    {p.product_name} ({p.product_quantity})
-                  </div>
+                  <div className="row product-row align-items-center py-2 border-bottom" key={i}>
+                    <div className="col-4">
+                      {p.product_name} ({p.product_quantity})
+                    </div>
 
-                  <div className="col-2 text-center">
-                    {p.sell_qty}
-                  </div>
+                    <div className="col-2 text-center">{p.sell_qty}</div>
 
-                  <div className="col-2 text-end">
-                    {Number(p.final_rate) !== Number(p.rate) ? (
-                      <>
-                        <div style={{ textDecoration: "line-through", fontSize: "12px", color: "#888" }}>
-                          ₹{Number(p.rate).toFixed(2)}
-                        </div>
-                        <div>₹{Number(p.final_rate).toFixed(2)}</div>
-                      </>
-                    ) : (
-                      <>₹{Number(p.rate).toFixed(2)}</>
-                    )}
-                  </div>
+                    <div className="col-2 text-end">
+                      {Number(p.final_rate) !== Number(p.rate) ? (
+                        <>
+                          <div style={{ textDecoration: "line-through", fontSize: "12px", color: "#888" }}>₹{Number(p.rate).toFixed(2)}</div>
+                          <div>₹{Number(p.final_rate).toFixed(2)}</div>
+                        </>
+                      ) : (
+                        <>₹{Number(p.rate).toFixed(2)}</>
+                      )}
+                    </div>
 
-                  <div className="col-2 text-end text-danger">
-                    {Number(p.rate) > Number(p.final_rate)
-                      ? `₹${(Number(p.rate) - Number(p.final_rate)).toFixed(2)}`
-                      : "—"}
-                  </div>
+                    <div className="col-2 text-end text-danger">
+                      {Number(p.rate) > Number(p.final_rate) ? `₹${(Number(p.rate) - Number(p.final_rate)).toFixed(2)}` : "—"}
+                    </div>
 
-                  <div className="col-2 text-end fw-semibold">
-                    ₹{(p.sell_qty * (p.final_rate || p.rate)).toFixed(2)}
+                    <div className="col-2 text-end fw-semibold">₹{(p.sell_qty * (p.final_rate || p.rate)).toFixed(2)}</div>
                   </div>
-
-                </div>
                 ))
               )}
             </div>
@@ -1227,7 +1148,7 @@ const staff_id = await ensureEmployeeExists();
                   <p className="amount-text mb-0">₹{totalTax.toFixed(2)}</p>
                 </div>
               </div> */}
-{/* 
+              {/* 
               {/* CGST *
               <div className="row align-items-center mt-1">
                 <div className="col-6">
@@ -1305,7 +1226,7 @@ const staff_id = await ensureEmployeeExists();
 
                         setCashAmount(val);
                       }}
-                        onWheel={(e) => e.target.blur()} 
+                      onWheel={(e) => e.target.blur()}
                     />
                   )}
                 </div>
@@ -1339,7 +1260,7 @@ const staff_id = await ensureEmployeeExists();
 
                         setUpiAmount(val);
                       }}
-                        onWheel={(e) => e.target.blur()} 
+                      onWheel={(e) => e.target.blur()}
                     />
                   )}
                 </div>
@@ -1373,7 +1294,7 @@ const staff_id = await ensureEmployeeExists();
 
                         setChequeAmount(val);
                       }}
-                        onWheel={(e) => e.target.blur()} 
+                      onWheel={(e) => e.target.blur()}
                     />
                   )}
                 </div>
@@ -1403,4 +1324,3 @@ const staff_id = await ensureEmployeeExists();
     </div>
   );
 };
-
