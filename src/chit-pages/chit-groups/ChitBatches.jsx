@@ -13,14 +13,39 @@ export const ChitBatches = () => {
   });
 
   const handleInput = (e) => {
-    let { name, value } = e.target;
+    const { name, value } = e.target;
 
-    setBatchData((prev) => {
-      return {
+    if (name === "start_date") {
+      const startDate = new Date(value);
+
+      // ADD 6 DAYS (inclusive total = 7)
+      const endDate = new Date(startDate);
+      endDate.setDate(startDate.getDate() + 6);
+
+      const getInclusiveDays = (start, end) => {
+        if (!start || !end) return "";
+
+        const startDate = new Date(start + "T00:00:00");
+        const endDate = new Date(end + "T00:00:00");
+
+        const diffTime = endDate - startDate;
+        const diffDays = diffTime / (1000 * 60 * 60 * 24);
+
+        return diffDays + 1; // inclusive count
+      };
+
+      setBatchData((prev) => ({
+        ...prev,
+        start_date: value,
+        end_date: endDate.toISOString().split("T")[0],
+        batch_duration: getInclusiveDays,
+      }));
+    } else {
+      setBatchData((prev) => ({
         ...prev,
         [name]: value,
-      };
-    });
+      }));
+    }
   };
 
   return (
@@ -366,14 +391,7 @@ export const ChitBatches = () => {
                       <label htmlFor="" className="form-label">
                         Batch Duration
                       </label>
-                      <input
-                        type="text"
-                        name="batch_duration"
-                        onChange={handleInput}
-                        value={batchData.batch_duration}
-                        className="form-control"
-
-                      />
+                      <input type="text" name="batch_duration" onChange={handleInput} value={batchData.batch_duration} className="form-control" />
                     </div>
 
                     <div className="col-lg-6">

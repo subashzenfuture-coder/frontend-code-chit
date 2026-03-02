@@ -5,6 +5,7 @@ import { useEffect, useState, useLayoutEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { getCustomerBillingById } from "../../services/customerBilling.service";
 import { getCompanyDetails } from "../../services/companyDetails.service";
+import "../../assets/fonts/fonts.css";
 
 // const BASE_URL = "http://localhost:5000";
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -12,7 +13,6 @@ const A4_BODY_HEIGHT = 250; // tune once for printer
 const PAGE_HEIGHT = 1122; // A4 printable height (Chrome)
 
 export const Invoice = () => {
-  
   const { id } = useParams();
 
   const [billing, setBilling] = useState(null);
@@ -123,61 +123,54 @@ export const Invoice = () => {
     });
   }, [products]);
 
- // ===== CALCULATION SECTION =====
-const calculated = products.reduce(
-  (acc, p) => {
-    const rate = Number(p.rate || 0);
-    const qty = Number(p.quantity || 0);
-    const discount = Number(p.discount_amount || 0);
-   // console.log(discount);
-    const finalRate =
-      p.final_rate !== undefined && p.final_rate !== null
-        ? Number(p.final_rate)
-        : rate - discount;
+  // ===== CALCULATION SECTION =====
+  const calculated = products.reduce(
+    (acc, p) => {
+      const rate = Number(p.rate || 0);
+      const qty = Number(p.quantity || 0);
+      const discount = Number(p.discount_amount || 0);
+      // console.log(discount);
+      const finalRate = p.final_rate !== undefined && p.final_rate !== null ? Number(p.final_rate) : rate - discount;
 
-    const lineSubtotal = rate * qty;          // before discount
-    const lineDiscount = discount * qty; 
-  //  console.log("Line Discount:", lineDiscount);
-    const lineFinalTotal = finalRate * qty;   // after discount
+      const lineSubtotal = rate * qty; // before discount
+      const lineDiscount = discount * qty;
+      //  console.log("Line Discount:", lineDiscount);
+      const lineFinalTotal = finalRate * qty; // after discount
 
-    const cgst=Number(p.cgst_amount || 0);
-    // console.log("CGST:", cgst);
-    const sgst=Number(p.sgst_amount || 0);
-    // console.log("SGST:", sgst);
-    const gsttotal=Number(p.gst_total_amount || 0);
-    // console.log("GST Total:", gsttotal);
-    acc.subtotal += lineSubtotal;
-    acc.totalDiscount += discount;
-    acc.totalAfterDiscount += lineFinalTotal;
-    acc.totalQuantity += qty;
+      const cgst = Number(p.cgst_amount || 0);
+      // console.log("CGST:", cgst);
+      const sgst = Number(p.sgst_amount || 0);
+      // console.log("SGST:", sgst);
+      const gsttotal = Number(p.gst_total_amount || 0);
+      // console.log("GST Total:", gsttotal);
+      acc.subtotal += lineSubtotal;
+      acc.totalDiscount += discount;
+      acc.totalAfterDiscount += lineFinalTotal;
+      acc.totalQuantity += qty;
 
-    //gst calculation
-    acc.totalCGST += cgst;
-    acc.totalSGST += sgst;
-    acc.totalGST += gsttotal;
-    
+      //gst calculation
+      acc.totalCGST += cgst;
+      acc.totalSGST += sgst;
+      acc.totalGST += gsttotal;
 
-    return acc;
-  },
-  {
-    subtotal: 0,
-    totalDiscount: 0,
-    totalQuantity: 0,
-    totalAfterDiscount: 0,
-    totalCGST: 0,
-    totalSGST: 0,
-    totalGST: 0,
-  }
-);
+      return acc;
+    },
+    {
+      subtotal: 0,
+      totalDiscount: 0,
+      totalQuantity: 0,
+      totalAfterDiscount: 0,
+      totalCGST: 0,
+      totalSGST: 0,
+      totalGST: 0,
+    },
+  );
 
-
-const grandTotal = calculated.totalAfterDiscount;
+  const grandTotal = calculated.totalAfterDiscount;
 
   if (!billing || !company) {
     return <p>Loading invoice...</p>;
   }
-
-  
 
   return (
     <div className="invoice-container " ref={pageRef}>
@@ -194,8 +187,8 @@ const grandTotal = calculated.totalAfterDiscount;
 
             <div className="center">
               <div className="center-top">
-                <h1>
-                  {company?.company_name} <sup>TM</sup>
+                <h1 style={{ fontFamily: "Algerian Regular" }}>
+                  {company?.company_name} <sup style={{top:"-25px"}}>TM</sup>
                 </h1>
               </div>
               <div className="center-bottom">
@@ -204,7 +197,9 @@ const grandTotal = calculated.totalAfterDiscount;
                   <br />
                   {company?.district}, {company?.state}, {company?.pincode}
                 </p>
-                <p className="py-1"><i class="bi bi-whatsapp"></i>&nbsp;<i class="bi bi-telephone"></i>&nbsp;7200002112 , 7200005786,9865065260</p>
+                <p className="py-1">
+                  <i class="bi bi-whatsapp"></i>&nbsp;<i class="bi bi-telephone"></i>&nbsp;7200002112 , 7200005786,9865065260
+                </p>
               </div>
             </div>
 
@@ -258,8 +253,6 @@ const grandTotal = calculated.totalAfterDiscount;
               <p>
                 <strong>Staff Name:</strong> <span style={{ color: "#a52a2a" }}>{billing.staff_name}</span>
               </p>
-
-              
             </div>
           </div>
         </div>
@@ -275,7 +268,6 @@ const grandTotal = calculated.totalAfterDiscount;
               <p>{billing.customer_address}</p>
             </div>
             <div className="customer-address" style={{ width: "30%" }}>
-             
               <p>
                 <strong>Customer GST:</strong>
                 {billing.vehicle_number ? billing.vehicle_number : "-"}
@@ -297,7 +289,6 @@ const grandTotal = calculated.totalAfterDiscount;
               <th width="10%">Discount</th>
               <th width="6%">QTY</th>
               <th width="12%">Final Rate</th>
-              
 
               <th width="12%" className="border-end-0">
                 AMOUNT
@@ -314,21 +305,13 @@ const grandTotal = calculated.totalAfterDiscount;
                 </td>
                 <td width="10%">{p.hsn_code || "-"}</td>
 
-                <td width="10%">
-                  ₹{Number(p.rate || 0).toFixed(2)}
-                </td>
-                 <td width="10%">
-                  {Number(p.discount_amount || 0) > 0
-                    ? `₹${Number(p.discount_amount).toFixed(2)}`
-                    : "—"}
-                </td>
+                <td width="10%">₹{Number(p.rate || 0).toFixed(2)}</td>
+                <td width="10%">{Number(p.discount_amount || 0) > 0 ? `₹${Number(p.discount_amount).toFixed(2)}` : "—"}</td>
                 <td width="6%">{p.quantity}</td>
 
-                 {/* FINAL RATE */}
-                  <td width="12%">
-                    ₹{Number(p.final_rate || p.rate || 0).toFixed(2)}
-                  </td>
-                
+                {/* FINAL RATE */}
+                <td width="12%">₹{Number(p.final_rate || p.rate || 0).toFixed(2)}</td>
+
                 <td width="12%">₹{Number(p.total).toFixed(2)}</td>
               </tr>
             ))}
@@ -347,8 +330,6 @@ const grandTotal = calculated.totalAfterDiscount;
               </tr>
             ))}
           </tbody>
-
-          
         </table>
         <div className="invoice-footer">
           <table className="invoice-table">
@@ -381,9 +362,7 @@ const grandTotal = calculated.totalAfterDiscount;
                             padding: "4px",
                             textAlign: "center",
                           }}>
-                          {/* ₹{gstAmount.toFixed(2)} */}
-                          ₹{calculated.totalGST.toFixed(2)}
-
+                          {/* ₹{gstAmount.toFixed(2)} */}₹{calculated.totalGST.toFixed(2)}
                         </td>
                       </tr>
 
@@ -427,10 +406,9 @@ const grandTotal = calculated.totalAfterDiscount;
 
                 <td style={{ fontSize: "16px", width: "12%" }}>Total</td>
                 <td className="grand-total" style={{ width: "12%" }}>
-                 ₹{grandTotal.toFixed(2)}
+                  ₹{grandTotal.toFixed(2)}
                 </td>
               </tr>
-             
 
               <tr>
                 <td colSpan="6">
