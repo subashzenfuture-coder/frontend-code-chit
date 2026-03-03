@@ -46,6 +46,8 @@ export const ProductBilling = () => {
 
   // const [advancePaid, setAdvancePaid] = useState(0);
 
+  const [invoicePreview, setInvoicePreview] = useState("");
+
   // const [gstNumber, setGstNumber] = useState("");
   const [companyGSTNumber, setCompanyGSTNumber] = useState("");
   const [customerGSTNumber, setCustomerGSTNumber] = useState("");
@@ -618,6 +620,22 @@ export const ProductBilling = () => {
     }
   }, [customers, selectedCustomerId, isEdit]);
 
+  useEffect(() => {
+    if (isEdit) return;
+
+    const loadInvoiceNumber = async () => {
+      try {
+        const res = await api.get("/customer-billing/next-invoice-number");
+
+        setInvoicePreview(res.data.nextInvoiceNumber || "INV-NEW");
+      } catch (err) {
+        console.error("Invoice API error:", err);
+      }
+    };
+
+    loadInvoiceNumber();
+  }, [isEdit]);
+
   return (
     <div className="product-billing">
       <div className="row gy-4 gx-0">
@@ -965,17 +983,10 @@ export const ProductBilling = () => {
         <div className="col-md-5">
           <div className="product-list-box invoice-box">
             {/* Header */}
-            <div className="row align-items-center">
-              <div className="col-6 left">
-                <div className="title">INVOICE</div>
-              </div>
-              <div className="col-6 right">
-                <div className="date">Date</div>
-                <div className="due">{today}</div>
-              </div>
-            </div>
             <div className="row invoice-header">
               <div className="col-6 left">
+                <div className="title">INVOICE</div>
+                <div className="invoice-no">{invoicePreview}</div>
                 <input
                   className="form-control form-control-sm mt-2"
                   type="text"
@@ -1004,6 +1015,9 @@ export const ProductBilling = () => {
               </div>
 
               <div className="col-6 right">
+                <div className="date">Date</div>
+                <div className="due">{today}</div>
+
                 <input
                   className="form-control form-control-sm mt-2"
                   placeholder="Customer GST Number"

@@ -20,6 +20,7 @@ import { UserDetail } from "./chit-pages/chit-reports/UserDetail";
 import { AgentStaffLayout } from "./chit-pages/chit-agent-staff/AgentStaffLayout";
 import { AgentStaffList } from "./chit-pages/chit-agent-staff/AgentStaffList";
 import { AgentDetail } from "./chit-pages/chit-agent-staff/AgentDetail";
+import { ChitCustomer } from "./chit-pages/chit-customer/ChitCustomer";
 
 function ChitRoutes() {
   return (
@@ -27,6 +28,7 @@ function ChitRoutes() {
       <Routes>
         <Route path="/chit-dashboard" element={<ChitDashboard />} />
         <Route path="/chit-plan" element={<ChitPlans />} />
+        <Route path="/chit-customers" element={<ChitCustomer />} />
         <Route path="/chit-batch" element={<ChitCollectionOutlet />}>
           <Route index element={<ChitBatches />} />
           <Route path="chit-groups" element={<ChitGroupLayout />}>

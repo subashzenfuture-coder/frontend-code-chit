@@ -12,14 +12,7 @@ const isAnyActive = (paths, current) => paths.some((p) => isActive(p, current));
 const routeMap = {
   billing: {
     main: "billing",
-    base: [
-      "/dashboard",
-      "/products",
-      "/accounts",
-      "/report",
-      "/customers",
-      "/vendors",
-    ],
+    base: ["/dashboard", "/products", "/accounts", "/report", "/customers", "/vendors"],
     subs: {
       products: ["/products"],
       accounts: ["/accounts"],
@@ -29,20 +22,12 @@ const routeMap = {
 
   chit: {
     main: "chit",
-    base: [
-      "/chit-dashboard",
-      "/chit-plan",
-      "/chit-batch",
-      "/agent-staff",
-      "/collection-batch",
-      "/chit-report",
-    ],
+    base: ["/chit-dashboard", "/chit-plan", "/chit-batch", "/agent-staff", "/collection-batch", "/chit-report"],
     subs: {
       "chit-report": ["/chit-report"],
     },
   },
 };
-
 
 export const Sidebar = () => {
   /* ================= STATE ================= */
@@ -331,6 +316,17 @@ export const Sidebar = () => {
                     <i class="fi fi-tr-brand-strategy"></i>
                   </span>
                   <span className="sidebar_text">Chit Plans</span>
+                </Link>
+              </li>
+
+              {/* Chit Customers */}
+
+              <li className={`sidebar_menu ${isActive("/chit-customers", location.pathname) ? "active" : ""}`}>
+                <Link to="/chit-customers" className="menu_header">
+                  <span className="sidebar_icon">
+                 <i class="fi fi-tr-member-list"></i>
+                  </span>
+                  <span className="sidebar_text">Chit Customers</span>
                 </Link>
               </li>
 
